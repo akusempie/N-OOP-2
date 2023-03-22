@@ -25,12 +25,18 @@ class Student:
 
     def __str__(self):
         self.averages = self.avg(self.grades)
-        self.average_of_averages = sum(self.averages.values())/len(self.averages)
+        self.average_of_averages = sum(self.averages.values()) / len(self.averages)
 
         return f'Имя: {self.name}\nФамилия: {self.surname}\n' \
-               f'Средняя оценка за домашние задания: {round(self.average_of_averages,1)}\n' \
+               f'Средняя оценка за домашние задания: {round(self.average_of_averages, 1)}\n' \
                f'Курсы в процессе изучения: {", ".join(str(x) for x in self.courses_in_progress)}\n' \
                f'Завершенные курсы: {", ".join(str(x) for x in self.finished_courses)}'
+
+    def __lt__(self, other):
+        return self.average_of_averages < other.average_of_averages
+
+    def __gt__(self, other):
+        return self.average_of_averages > other.average_of_averages
 
 
 class Mentor:
@@ -55,10 +61,16 @@ class Lecturer(Mentor):
 
     def __str__(self):
         self.averages = self.avg(self.grades)
-        self.average_of_averages = sum(self.averages.values())/len(self.averages)
+        self.average_of_averages = sum(self.averages.values()) / len(self.averages)
 
         return f'Имя: {self.name}\nФамилия: {self.surname}\n' \
-               f'Средняя оценка за лекции: {round(self.average_of_averages,1)}'
+               f'Средняя оценка за лекции: {round(self.average_of_averages, 1)}'
+
+    def __lt__(self, other):
+        return self.average_of_averages < other.average_of_averages
+
+    def __gt__(self, other):
+        return self.average_of_averages > other.average_of_averages
 
 
 class Reviewer(Mentor):
@@ -83,7 +95,6 @@ grading_student = Student('Morty', 'Sanchez', 'male')
 grading_student.courses_in_progress += ['Python', 'Git']
 best_student.finished_courses += ['Введение в программирование']
 
-
 # называем определенного ревьювера и назначаем ему курс
 
 cool_mentor = Reviewer('Some', 'Buddy')
@@ -105,14 +116,13 @@ cool_mentor.rate_hw(grading_student, 'Python', 10)
 cool_mentor.rate_hw(grading_student, 'Git', 10)
 cool_mentor.rate_hw(grading_student, 'Git', 5)
 
-
-
 # ставим оценки лектору
 
 grading_student.rate_lecturer(cool_lecturer, 'Python', 10)
 grading_student.rate_lecturer(cool_lecturer, 'Git', 9)
 grading_student.rate_lecturer(regular_lecturer, 'Python', 8)
 best_student.rate_lecturer(regular_lecturer, 'Git', 5)
+
 
 # Функция сравнения оценок студентов или преподавателей
 
@@ -135,7 +145,7 @@ def avg_student_grades(students, course_name):
             if course == course_name:
                 average[course] = (sum(grade) / len(grade))
 
-                return f'Средняя оценка у всех студентов по курсу {course}: {round(average[course],1)}'
+                return f'Средняя оценка у всех студентов по курсу {course}: {round(average[course], 1)}'
 
 
 print(grading_student, best_student, sep='\n')
@@ -144,3 +154,8 @@ print(cool_lecturer, regular_lecturer, cool_mentor, sep='\n')
 print(compare(first_person=best_student, second_person=grading_student))
 print(avg_student_grades(students_list, course_name='Python'))
 
+# Реализация методов __lt__, __gt__
+is_student_lt = (best_student < grading_student)
+is_student_gt = (best_student > grading_student)
+print(is_student_lt)
+print(is_student_gt)
